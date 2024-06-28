@@ -1,12 +1,22 @@
 import "./App.css";
+import TabComponent from "./components/tab/wrapper";
 import ProgressBarComponent from "./components/progress-bar/wrapper";
 
-function App() {
+function Divider () {
+  return(
+    <div className="divider"></div>
+  );
+}
 
+function App() {
   return (
-    <div className="App">
+    <>
+      <Divider />
       <ProgressBarComponent />
-    </div>
+      <Divider />
+      <TabComponent />
+      <Divider />
+    </>
   );
 }
 

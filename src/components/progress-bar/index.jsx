@@ -13,7 +13,6 @@ const ProgressBar = ({
 
   return (
     <div className="progress-wrapper">
-      <p>Progress bar</p>
       <div
         aria-valuemin={0}
         role="progressbar"
@@ -26,7 +25,10 @@ const ProgressBar = ({
         </span>
         <div
           className="bar-inner"
-          style={{ transform: `translateX(${value.toFixed() - 100}%)` }}
+          style={{
+            transform: `translateX(${value.toFixed() - 100}%)`,
+            transition: "transform 0.2s ease-in-out",
+          }}
         />
       </div>
       <p>{value < 100 ? "Loading..." : "Complete!"}</p>

@@ -1,8 +1,5 @@
 .progress-wrapper {
-    gap: 5px;
     width: 100%;
-    display: flex;
-    flex-direction: column;
 }
 
 .bar-outer {

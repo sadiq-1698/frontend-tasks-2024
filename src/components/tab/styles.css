@@ -1,0 +1,38 @@
+.tab-wrapper {
+    width: 360px;
+    margin: 0 auto;
+}
+
+.tabs {
+    display: flex;
+}
+
+.tabs .tab {
+    flex: 1;
+    cursor: pointer;
+    height: 40px;
+    background-color: white;
+}
+
+.tabs .tab.tab-active {
+    background-color: lightgrey;
+    font-weight: bold;
+}
+
+.tab-content {
+    width: 100%;
+    height: 500px;
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.tab-content-inner-wrapper {
+    width: 100%;
+    display: flex;
+    min-height: 100%;
+    overflow-x: hidden;
+}
+
+.tab-content-inner {
+    min-width: 100%;
+}
