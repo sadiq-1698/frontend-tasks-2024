@@ -12,7 +12,7 @@ const ProgressBar = ({
   }, [value, onComplete]);
 
   return (
-    <div className="progress-wrapper">
+    <>
       <div
         aria-valuemin={0}
         role="progressbar"
@@ -20,7 +20,7 @@ const ProgressBar = ({
         className="bar-outer"
         aria-valuenow={value.toFixed()}
       >
-        <span style={{ color: value >= 55 ? "white" : "black" }}>
+        <span style={{ color: value >= 53 ? "white" : "black" }}>
           {Math.min(100, Math.max(0, value.toFixed()))}%
         </span>
         <div
@@ -32,7 +32,7 @@ const ProgressBar = ({
         />
       </div>
       <p>{value < 100 ? "Loading..." : "Complete!"}</p>
-    </div>
+    </>
   );
 };
 
