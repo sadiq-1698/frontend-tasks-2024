@@ -3,12 +3,9 @@ import "./styles.css";
 
 const Tab = ({ tabContents = [], buttonLabels = [] }) => {
   const [tabIndex, setTabIndex] = useState(0);
-  const [direction, setDirection] = useState(0);
 
   const handleTabClick = (index) => {
-    if (index === tabIndex) return;
-    setDirection(-index);
-    setTabIndex(index);
+    if (index !== tabIndex) setTabIndex(index);
   };
 
   return (
@@ -18,9 +15,8 @@ const Tab = ({ tabContents = [], buttonLabels = [] }) => {
           return (
             <button
               role="tab"
-              key={buttonLabels[idx] + "-|-" + idx}
               onClick={() => handleTabClick(idx)}
-              style={{ borderBottomWidth: "1px" }}
+              key={buttonLabels[idx] + "-|-" + idx}
               className={`tab ${tabIndex === idx ? "tab-active" : ""}`}
             >
               {buttonLabels[idx]}
@@ -32,7 +28,7 @@ const Tab = ({ tabContents = [], buttonLabels = [] }) => {
       <div className="tab-content">
         <div className="tab-content-inner-wrapper">
           {tabContents.map((tabContent, idx) => {
-            const translate = `translateX(${direction * 100}%)`;
+            const translate = `translateX(${-tabIndex * 100}%)`;
             return (
               <div
                 className="tab-content-inner"
