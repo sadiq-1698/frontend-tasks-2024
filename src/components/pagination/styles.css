@@ -37,3 +37,12 @@
     font-weight: bold;
     background-color: blue;
 }
+
+.products-grid__single.loading {
+    opacity: 0;
+    user-select: none;
+}
+
+p.products-loader {
+    position: absolute;
+}

@@ -4,15 +4,17 @@ import "./styles.css";
 const PAGE_LIMIT = 18;
 
 const DisplayProducts = ({ products, loading }) => {
-  if (loading) return <p>Loading...</p>;
-
   return (
     <div className="products-grid">
       {products.map((prod) => (
-        <div className="products-grid__single" key={prod.id}>
+        <div
+          key={prod.id}
+          className={`products-grid__single ${loading ? "loading" : ""}`}
+        >
           {prod.title}
         </div>
       ))}
+      {loading && <p className="products-loader">Loading...</p>}
     </div>
   );
 };
