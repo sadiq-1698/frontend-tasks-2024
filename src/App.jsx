@@ -3,6 +3,7 @@ import TabComponent from "./components/tab/wrapper";
 import PaginationComponent from "./components/pagination/wrapper";
 import GridSelectComponent from "./components/grid-select/wrapper";
 import ProgressBarComponent from "./components/progress-bar/wrapper";
+import TextUnderlineComponent from "./components/text-underline/wrapper";
 
 const Divider = () => <div className="divider" />;
 
@@ -17,6 +18,8 @@ function App() {
       <GridSelectComponent />
       <Divider />
       <PaginationComponent />
+      <Divider />
+      <TextUnderlineComponent />
       <Divider />
     </>
   );
