@@ -1,5 +1,6 @@
 import "./App.css";
 import TabComponent from "./components/tab/wrapper";
+import PaginationComponent from "./components/pagination/wrapper";
 import GridSelectComponent from "./components/grid-select/wrapper";
 import ProgressBarComponent from "./components/progress-bar/wrapper";
 
@@ -14,6 +15,8 @@ function App() {
       <TabComponent />
       <Divider />
       <GridSelectComponent />
+      <Divider />
+      <PaginationComponent />
       <Divider />
     </>
   );

@@ -1,0 +1,39 @@
+.pagination-wrapper {
+    width: 360px;
+    margin: 0 auto;
+}
+
+.pagination-wrapper button {
+    cursor: pointer;
+    padding: 5px;
+}
+
+.pagination-wrapper button.active {
+    background-color: black;
+    color: white;
+    font-weight: 600;
+}
+
+.pagination-wrapper button:disabled {
+    cursor: not-allowed;
+}
+
+.products-grid {
+    gap: 10px;
+    display: grid;
+    grid-auto-rows: 1fr;
+    grid-row-gap: 10px;
+    place-items: center;
+    max-width: fit-content;
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 20px;
+}
+
+.products-grid__single {
+    height: 100%;
+    width: 100%;
+    padding: 2px;
+    color: white;
+    font-weight: bold;
+    background-color: blue;
+}
