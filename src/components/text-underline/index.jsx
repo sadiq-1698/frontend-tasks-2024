@@ -17,6 +17,11 @@ const TextUnderline = () => {
         <span>Animation 3</span>
         <div className="animation__drop" />
       </a>
+
+      <a href="/">
+        <span>Animation 4</span>
+        <div className="animation__gradient" />
+      </a>
     </div>
   );
 };

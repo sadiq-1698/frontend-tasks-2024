@@ -1,9 +1,11 @@
 .text-underline-grid-gallery {
+    row-gap: 20px;
     width: 360px;
     display: flex;
     margin: 0 auto;
-    justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: space-between;
 }
 
 .text-underline-grid-gallery a {
@@ -53,4 +55,14 @@
 
 .text-underline-grid-gallery a:hover div.animation__drop {
     margin-top: 2px;
+}
+
+.text-underline-grid-gallery a div.animation__gradient {
+    width: 100%;
+}
+
+.text-underline-grid-gallery a:hover div.animation__gradient {
+    background: linear-gradient(217deg, rgba(255, 0, 0, .8), rgba(255, 0, 0, 0) 70.71%),
+        linear-gradient(127deg, rgba(0, 255, 0, .8), rgba(0, 255, 0, 0) 70.71%),
+        linear-gradient(336deg, rgba(0, 0, 255, .8), rgba(0, 0, 255, 0) 70.71%);
 }

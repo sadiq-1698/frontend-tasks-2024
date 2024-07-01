@@ -4,13 +4,11 @@ const useProgress = () => {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const timeout = setTimeout(() => {
       setValue((prev) => (prev < 100 ? prev + 1 : prev));
     }, 100);
 
-    if (value >= 100) clearInterval(interval);
-
-    return () => clearInterval(interval);
+    return () => clearTimeout(timeout);
   }, [value]);
 
   return value;
