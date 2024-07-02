@@ -1,0 +1,21 @@
+.sticky-words-wrapper {
+    width: 360px;
+    height: 600px;
+    margin: 0 auto;
+    position: relative;
+    border: thick double #32a1ce;
+}
+
+.sticky-word {
+    cursor: move;
+    padding: 10px;
+    color: black;
+    font-weight: 700;
+    position: absolute;
+    background-color: lightyellow;
+    transition: 0.2s transform ease-in-out;
+}
+
+.sticky-word__label {
+    user-select: none;
+}
