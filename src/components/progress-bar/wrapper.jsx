@@ -1,5 +1,5 @@
 import ProgressBar from ".";
-import useProgress from "./useProgress";
+import useProgress from "../../hooks/useProgress";
 
 const ProgressBarComponent = () => {
   const progressBarValue = useProgress();
