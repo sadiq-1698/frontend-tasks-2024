@@ -1,0 +1,45 @@
+.file-explorer-wrapper {
+    width: 360px;
+    padding: 6px;
+    height: 600px;
+    margin: 0 auto;
+    border: 1px solid black;
+    background-color: lightyellow;
+}
+
+.folder {
+    padding: 5px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: space-between;
+}
+
+input {
+    display: block;
+    outline: none;
+    height: 20px;
+    padding: 5px 5px;
+    margin: 0 25px;
+    text-align: left;
+    border: 0px solid lightgrey;
+}
+
+.folder__children {
+    padding: 5px 0;
+    padding-left: 10px;
+}
+
+.folder span {
+    font-weight: 500;
+}
+
+.folder__add-btns {
+    gap: 2px;
+    display: flex;
+    align-items: center;
+}
+
+.folder__add-btns button {
+    cursor: pointer;
+}

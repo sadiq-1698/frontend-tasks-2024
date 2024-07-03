@@ -4,6 +4,7 @@ import PaginationComponent from "./components/pagination/wrapper";
 import GridSelectComponent from "./components/grid-select/wrapper";
 import StickyNotesComponent from "./components/sticky-notes/wrapper";
 import ProgressBarComponent from "./components/progress-bar/wrapper";
+import FileExplorerComponent from "./components/file-explorer/wrapper";
 import TextUnderlineComponent from "./components/text-underline/wrapper";
 
 const Divider = () => <div className="divider" />;
@@ -23,6 +24,8 @@ function App() {
       <TextUnderlineComponent />
       <Divider />
       <StickyNotesComponent />
+      <Divider />
+      <FileExplorerComponent />
       <Divider />
     </>
   );
