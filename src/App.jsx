@@ -6,13 +6,13 @@ import StickyNotesComponent from "./components/sticky-notes/wrapper";
 import ProgressBarComponent from "./components/progress-bar/wrapper";
 import FileExplorerComponent from "./components/file-explorer/wrapper";
 import TextUnderlineComponent from "./components/text-underline/wrapper";
+import GridSelectDragComponent from "./components/grid-drag-select/wrapper";
 
 const Divider = () => <div className="divider" />;
 
 function App() {
   return (
     <>
-      <Divider />
       <ProgressBarComponent />
       <Divider />
       <TabComponent />
@@ -26,6 +26,8 @@ function App() {
       <StickyNotesComponent />
       <Divider />
       <FileExplorerComponent />
+      <Divider />
+      <GridSelectDragComponent />
       <Divider />
     </>
   );

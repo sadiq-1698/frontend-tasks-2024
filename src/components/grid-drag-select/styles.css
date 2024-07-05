@@ -1,0 +1,22 @@
+.grid-drag-wrapper {
+    width: 360px;
+    display: grid;
+    margin: 0 auto;
+    place-items: center;
+}
+
+.grid-drag-box {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+}
+
+.grid-drag-box.selected {
+    background-color: lightskyblue;
+}
