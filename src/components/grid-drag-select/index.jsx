@@ -55,7 +55,7 @@ const GridSelectDrag = ({ rows, cols }) => {
             key={rows * cols - idx}
             onMouseDown={() => handleMouseDown(idx + 1)}
             className={`grid-drag-box ${isSelected ? "selected" : ""}`}
-            onMouseEnter={() => isDragging && handleMouseEnter(idx + 1)}
+            onMouseEnter={() => (isDragging ? handleMouseEnter(idx + 1) : {})}
           >
             {idx + 1}
           </div>
