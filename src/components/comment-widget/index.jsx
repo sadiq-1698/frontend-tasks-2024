@@ -1,86 +1,84 @@
-import { useRef, useState } from "react";
-
+import { useState } from "react";
 import "./styles.css";
 
 const makeComment = (comment, children = []) => ({
+  id: Date.now().toString(), // Unique ID for each comment/reply
   comment,
   children,
 });
 
-const CommentList = ({ comments, handleDeleteComment }) => {
+const CommentItem = ({ comment, onReply, onDelete, isMain }) => {
   const [replyValue, setReplyValue] = useState("");
-  const [showReplyField, setShowReplyField] = useState({
-    show: false,
-    index: -1,
-  });
+  const [showReplyField, setShowReplyField] = useState(false);
 
-  const resetReplyField = () => {
-    setShowReplyField({
-      show: false,
-      index: -1,
-    });
-    setReplyValue("");
-  };
+  const handleReplyToggle = () => setShowReplyField((prev) => !prev);
 
-  const handleToggleReplyField = (index) => {
-    setShowReplyField({ show: true, index });
-  };
-
-  const handleReplyValueChange = (e) => {
-    if (e.target.value.toString().trim().length <= 0) return;
+  const handleReplyChange = (e) => {
     setReplyValue(e.target.value);
   };
 
-  const handleSubmitReply = () => {
-    
-  }
-
-  const handleReplyKeyDown = (e) => {
-    if (e.keyCode === 13) {
+  const handleReplySubmit = () => {
+    if (replyValue.trim()) {
+      onReply(comment.id, replyValue.trim());
+      setReplyValue("");
+      setShowReplyField(false);
     }
   };
 
+  const handleReplyKeyDown = (e) => {
+    if (e.key === "Enter") handleReplySubmit();
+  };
+
+  return (
+    <div className={`comment-item${isMain ? " main" : ""}`}>
+      <span className="comment-item__text">{comment.comment}</span>
+      <div className="comment-actions">
+        <span className="action-reply" onClick={handleReplyToggle}>
+          Reply
+        </span>
+        <span className="action-delete" onClick={() => onDelete(comment.id)}>
+          Delete
+        </span>
+      </div>
+
+      {showReplyField && (
+        <div className="reply-field-wrapper">
+          <input
+            value={replyValue}
+            className="reply-field"
+            placeholder="Add a reply..."
+            onChange={handleReplyChange}
+            onKeyDown={handleReplyKeyDown}
+            autoFocus
+          />
+          <button onClick={handleReplySubmit}>Reply</button>
+        </div>
+      )}
+
+      {comment.children && comment.children.length > 0 && (
+        <CommentList
+          isMain={false}
+          onReply={onReply}
+          onDelete={onDelete}
+          comments={comment.children}
+        />
+      )}
+    </div>
+  );
+};
+
+const CommentList = ({ comments, onReply, onDelete, isMain = true }) => {
   return (
     <div className="comment-list">
-      {comments.map((comment, index) => {
-        return (
-          <div className="comment-item" key={comment.comment + "-|-" + index}>
-            <span className="comment-item__text">{comment.comment}</span>
-            <div className="comment-actions">
-              <span
-                className="action-reply"
-                onClick={() => handleToggleReplyField(index)}
-              >
-                Reply
-              </span>
-              <span
-                className="action-delete"
-                onClick={() => {
-                  handleDeleteComment(index);
-                  resetReplyField();
-                }}
-              >
-                Delete
-              </span>
-            </div>
-
-            {showReplyField.show && showReplyField.index === index ? (
-              <div>
-                <input
-                  value={replyValue}
-                  className="reply-field"
-                  placeholder="Add a reply..."
-                  onKeyDown={handleReplyKeyDown}
-                  onChange={handleReplyValueChange}
-                />
-                <button>Reply</button>
-              </div>
-            ) : (
-              <></>
-            )}
-          </div>
-        );
-      })}
+      {comments.map((comment) => (
+        <CommentItem
+          isMain={isMain}
+          key={comment.id}
+          comment={comment}
+          onReply={onReply}
+          onDelete={onDelete}
+        />
+      ))}
     </div>
   );
 };
@@ -90,23 +88,52 @@ const CommentWidget = () => {
   const [allComments, setAllComments] = useState([]);
 
   const handleMainCommentChange = (e) => {
-    if (e.target.value.toString().trim().length <= 0) return;
-    setMainComment(e.target.value);
+    if (e.target.value.toString().trim()) setMainComment(e.target.value);
   };
 
   const handleMainCommentSubmit = () => {
-    const result = [...allComments, makeComment(mainComment)];
-    setAllComments([...result]);
-    setMainComment("");
+    if (mainComment.trim()) {
+      setAllComments([...allComments, makeComment(mainComment.trim())]);
+      setMainComment("");
+    }
   };
 
   const handleMainCommentKeyDown = (e) => {
-    if (e.keyCode === 13) handleMainCommentSubmit();
+    if (e.key === "Enter") handleMainCommentSubmit();
   };
 
-  const handleDeleteComment = (index) => {
-    const result = allComments.filter((_, idx) => idx !== index);
-    setAllComments([...result]);
+  const handleReply = (parentId, reply) => {
+    const addReply = (comments) => {
+      return comments.map((comment) => {
+        if (comment.id === parentId) {
+          return {
+            ...comment,
+            children: [...(comment.children || []), makeComment(reply)],
+          };
+        }
+        if (comment.children && comment.children.length > 0) {
+          return { ...comment, children: addReply(comment.children) };
+        }
+        return comment;
+      });
+    };
+
+    setAllComments(addReply(allComments));
+  };
+
+  const handleDelete = (commentId) => {
+    const deleteComment = (comments) => {
+      return comments
+        .filter((comment) => comment.id !== commentId)
+        .map((comment) => {
+          if (comment.children && comment.children.length > 0) {
+            return { ...comment, children: deleteComment(comment.children) };
+          }
+          return comment;
+        });
+    };
+
+    setAllComments(deleteComment(allComments));
   };
 
   return (
@@ -121,13 +148,12 @@ const CommentWidget = () => {
         <button onClick={handleMainCommentSubmit}>Submit</button>
       </div>
 
-      {allComments.length > 0 ? (
+      {allComments.length > 0 && (
         <CommentList
           comments={allComments}
-          handleDeleteComment={handleDeleteComment}
+          onReply={handleReply}
+          onDelete={handleDelete}
         />
-      ) : (
-        <></>
       )}
     </div>
   );

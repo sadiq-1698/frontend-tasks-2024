@@ -35,10 +35,23 @@
     width: 100%;
     display: flex;
     padding: 4px 0px;
-    margin-bottom: 4px;
     flex-direction: column;
     align-items: flex-start;
+}
+
+.comment-widget-wrapper .comment-item.main {
     border-bottom: 2px solid grey;
+    margin-bottom: 4px;
+}
+
+.comment-widget-wrapper .comment-item .reply-field-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.comment-widget-wrapper .comment-item .reply-field-wrapper input {
+    flex: 1
 }
 
 .comment-widget-wrapper .comment-item .comment-item__text {
