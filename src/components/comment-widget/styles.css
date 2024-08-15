@@ -1,74 +1,52 @@
-.comment-widget-wrapper {
+.comment-item-styles {
+    margin-left: 10px;
+    padding: 2px;
+  }
+  
+  .comment-text-styles {
+    font-size: 20px;
+    text-align: left;
+    margin-bottom: 8px;
+  }
+  
+  .comment-action-wrapper-styles {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .comment-action-styles {
+    font-weight: bold;
+    font-size: 10px;
+    cursor: pointer;
+  }
+  
+  .comment-action-styles-delete {
+    color: red;
+  }
+  
+  .comment-widget-wrapper-styles {
     width: 360px;
     margin: 0 auto;
-}
-
-.comment-widget-wrapper .main-comment-section {
+  }
+  
+  .main-comment-box-wrapper-styles {
+    width: 100%;
     display: flex;
     align-items: center;
-}
-
-.comment-widget-wrapper .main-comment-section textarea {
+  }
+  
+  .main-comment-input-styles {
     flex: 1;
-    padding: 4px;
-    text-align: left;
-    margin-right: 4px;
-}
-
-.comment-widget-wrapper .main-comment-section button {
-    cursor: pointer;
-}
-
-.comment-widget-wrapper .comment-list {
-    display: flex;
-    margin-top: 8px;
-    margin-left: 8px;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.comment-widget-wrapper .comment-list input.reply-field {
-    margin: 0
-}
-
-.comment-widget-wrapper .comment-item {
+    margin: 0;
+  }
+  
+  .reply-field-wrapper-styles {
     width: 100%;
-    display: flex;
-    padding: 4px 0px;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.comment-widget-wrapper .comment-item.main {
-    border-bottom: 2px solid grey;
-    margin-bottom: 4px;
-}
-
-.comment-widget-wrapper .comment-item .reply-field-wrapper {
     display: flex;
     align-items: center;
-    width: 100%;
-}
-
-.comment-widget-wrapper .comment-item .reply-field-wrapper input {
-    flex: 1
-}
-
-.comment-widget-wrapper .comment-item .comment-item__text {
-    word-wrap: break-word;
-    max-width: 100%;
-    text-align: left;
-}
-
-.comment-widget-wrapper .comment-actions {
-    gap: 10px;
-    display: flex;
-    cursor: pointer;
-    margin-top: 8px;
-    font-size: 10px;
-    font-weight: bold;
-}
-
-.comment-widget-wrapper .comment-actions .action-delete {
-    color: red;
-}
+  }
+  
+  .reply-field-styles {
+    flex: 1;
+    margin: 0;
+  }
