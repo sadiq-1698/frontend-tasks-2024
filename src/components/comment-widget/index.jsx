@@ -1,159 +1,177 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./styles.css";
 
-const makeComment = (comment, children = []) => ({
-  id: Date.now().toString(), // Unique ID for each comment/reply
-  comment,
-  children,
-});
+const makeComment = (comment, children = []) => {
+  return {
+    id: Date.now().toString(),
+    comment,
+    children,
+  };
+};
 
-const CommentItem = ({ comment, onReply, onDelete, isMain }) => {
-  const [replyValue, setReplyValue] = useState("");
-  const [showReplyField, setShowReplyField] = useState(false);
+const DEFAULT_REPLY_FIELD_STATUS = {
+  show: false,
+  id: -1,
+};
 
-  const handleReplyToggle = () => setShowReplyField((prev) => !prev);
+const CommentList = ({ comments, onReply, onDelete }) => {
+  return (
+    <div>
+      {comments.map((comment) => {
+        return (
+          <CommentItem
+            comment={comment}
+            onReply={onReply}
+            onDelete={onDelete}
+          />
+        );
+      })}
+    </div>
+  );
+};
 
-  const handleReplyChange = (e) => {
-    setReplyValue(e.target.value);
+const CommentItem = ({ comment, onReply, onDelete }) => {
+  const replyRef = useRef();
+  const [replyVal, setReplyVal] = useState("");
+  const [replyField, setReplyField] = useState(DEFAULT_REPLY_FIELD_STATUS);
+
+  const handleReplyClick = () => {
+    setReplyField({
+      id: comment.id,
+      show: true,
+    });
   };
 
-  const handleReplySubmit = () => {
-    if (replyValue.trim()) {
-      onReply(comment.id, replyValue.trim());
-      setReplyValue("");
-      setShowReplyField(false);
+  const handleReplyValChange = (e) => {
+    if (e.target.value.toString().trim().length < 0) return;
+    setReplyVal(e.target.value);
+  };
+
+  const handleSubmitReply = () => {
+    onReply(comment.id, replyVal);
+    setReplyVal("");
+    setReplyField(DEFAULT_REPLY_FIELD_STATUS);
+  };
+
+  useEffect(() => {
+    if (replyField.show) {
+      replyRef?.current?.focus();
     }
-  };
-
-  const handleReplyKeyDown = (e) => {
-    if (e.key === "Enter") handleReplySubmit();
-  };
+  }, [replyField.show]);
 
   return (
-    <div className={`comment-item${isMain ? " main" : ""}`}>
-      <span className="comment-item__text">{comment.comment}</span>
-      <div className="comment-actions">
-        <span className="action-reply" onClick={handleReplyToggle}>
+    <div key={comment.id} className="comment-item-styles">
+      <p className="comment-text-styles">{comment.comment}</p>
+      <div className="comment-action-wrapper-styles">
+        <span className="comment-action-styles" onClick={handleReplyClick}>
           Reply
         </span>
-        <span className="action-delete" onClick={() => onDelete(comment.id)}>
+        <span
+          className="comment-action-styles comment-action-styles-delete"
+          onClick={() => onDelete(comment.id)}
+        >
           Delete
         </span>
       </div>
 
-      {showReplyField && (
-        <div className="reply-field-wrapper">
+      {replyField.show && replyField.id === comment.id && (
+        <div className="reply-field-wrapper-styles">
           <input
-            value={replyValue}
-            className="reply-field"
-            placeholder="Add a reply..."
-            onChange={handleReplyChange}
-            onKeyDown={handleReplyKeyDown}
-            autoFocus
+            ref={replyRef}
+            value={replyVal}
+            className="reply-field-styles"
+            placeholder="Reply to this comment..."
+            onChange={handleReplyValChange}
+            onKeyDown={(e) => (e.keyCode === 13 ? handleSubmitReply() : {})}
           />
-          <button onClick={handleReplySubmit}>Reply</button>
+          <button onClick={handleSubmitReply}>Submit</button>
         </div>
       )}
 
       {comment.children && comment.children.length > 0 && (
         <CommentList
-          isMain={false}
-          onReply={onReply}
-          onDelete={onDelete}
           comments={comment.children}
+          onDelete={onDelete}
+          onReply={onReply}
         />
       )}
     </div>
   );
 };
 
-const CommentList = ({ comments, onReply, onDelete, isMain = true }) => {
-  return (
-    <div className="comment-list">
-      {comments.map((comment) => (
-        <CommentItem
-          isMain={isMain}
-          key={comment.id}
-          comment={comment}
-          onReply={onReply}
-          onDelete={onDelete}
-        />
-      ))}
-    </div>
-  );
-};
-
 const CommentWidget = () => {
-  const [mainComment, setMainComment] = useState("");
   const [allComments, setAllComments] = useState([]);
+  const [mainComment, setMainComment] = useState("");
 
   const handleMainCommentChange = (e) => {
-    if (e.target.value.toString().trim()) setMainComment(e.target.value);
+    if (e.target.value.toString().trim().length < 0) return;
+    setMainComment(e.target.value);
   };
 
-  const handleMainCommentSubmit = () => {
-    if (mainComment.trim()) {
-      setAllComments([...allComments, makeComment(mainComment.trim())]);
-      setMainComment("");
-    }
+  const handleSubmitMainComment = () => {
+    if (mainComment.toString().trim().length > 0)
+      setAllComments((prev) => [...prev, makeComment(mainComment)]);
+    setMainComment("");
   };
 
-  const handleMainCommentKeyDown = (e) => {
-    if (e.key === "Enter") handleMainCommentSubmit();
-  };
-
-  const handleReply = (parentId, reply) => {
+  const handleAddReply = (commentId, reply) => {
     const addReply = (comments) => {
       return comments.map((comment) => {
-        if (comment.id === parentId) {
+        if (comment.id === commentId) {
           return {
             ...comment,
             children: [...(comment.children || []), makeComment(reply)],
           };
         }
-        if (comment.children && comment.children.length > 0) {
+        if (comment.children) {
           return { ...comment, children: addReply(comment.children) };
         }
         return comment;
       });
     };
 
-    setAllComments(addReply(allComments));
+    setAllComments([...addReply(allComments)]);
   };
 
-  const handleDelete = (commentId) => {
-    const deleteComment = (comments) => {
+  const handleDeleteReply = (commentId) => {
+    const deleteReply = (comments) => {
       return comments
-        .filter((comment) => comment.id !== commentId)
         .map((comment) => {
-          if (comment.children && comment.children.length > 0) {
-            return { ...comment, children: deleteComment(comment.children) };
+          if (comment.id === commentId) {
+            return null;
+          }
+          if (comment.children) {
+            return { ...comment, children: deleteReply(comment.children) };
           }
           return comment;
-        });
+        })
+        .filter((comm) => comm);
     };
 
-    setAllComments(deleteComment(allComments));
+    setAllComments([...deleteReply(allComments)]);
   };
 
   return (
-    <div className="comment-widget-wrapper">
-      <div className="main-comment-section">
-        <textarea
+    <div className="comment-widget-wrapper-styles">
+      <div className="main-comment-box-wrapper-styles">
+        <input
           value={mainComment}
           placeholder="Add a comment..."
+          className="main-comment-input-styles"
           onChange={handleMainCommentChange}
-          onKeyDown={handleMainCommentKeyDown}
+          onKeyDown={(e) => (e.keyCode === 13 ? handleSubmitMainComment() : {})}
         />
-        <button onClick={handleMainCommentSubmit}>Submit</button>
+        <button onClick={handleSubmitMainComment}>Submit</button>
       </div>
 
-      {allComments.length > 0 && (
+      {allComments.length > 0 ? (
         <CommentList
           comments={allComments}
-          onReply={handleReply}
-          onDelete={handleDelete}
+          onReply={handleAddReply}
+          onDelete={handleDeleteReply}
         />
+      ) : (
+        <></>
       )}
     </div>
   );
