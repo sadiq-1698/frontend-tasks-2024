@@ -1,82 +1,132 @@
 import { useState } from "react";
-import handleInsertNode from "../../utils/handleInsertNode";
+import FILE_EXPLORER_DATA from "./data";
 
 import "./styles.css";
 
-const Folder = ({ node }) => {
-  const [expanded, setExpanded] = useState(node.isRoot ? [node.id] : []);
+const Folder = ({ node, onCreateFolder }) => {
+  const [inputVal, setInputVal] = useState("");
   const [showInput, setShowInput] = useState(null);
+  const [showChildren, setShowChildren] = useState(false);
 
-  const handleExpand = (id) => {
-    if (expanded.includes(id.toString())) {
-      setExpanded((prev) => prev.filter((el) => el !== id));
-    } else {
-      setExpanded((prev) => [...prev, id.toString()]);
-    }
-  };
-
-  const handleAddFileBtnClick = (e, isFolder = true) => {
+  const onAddFolderClick = (e, isFolder = true) => {
     if (e && typeof e.stopPropagation === "function") e.stopPropagation();
-    setShowInput({ isFolder });
+    if (!showInput) setShowInput({ isFolder });
   };
 
-  const handleCreateFile = (e, currentNode) => {
-    if (e.keyCode === 13) {
-      const value = {
-        isFolder: showInput?.isFolder,
-        name: e.target.value.toString().trim(),
-        id: Date.now() + e.target.value.toString().trim(),
-      };
-
-      handleInsertNode(node, currentNode, value);
-      setExpanded((prev) => [...prev, currentNode.id]);
-      setShowInput(null);
-    }
+  const handleKeyDown = (e) => {
+    if (e.keyCode !== 13) return;
+    onCreateFolder(node.id, inputVal, showInput.isFolder, node.isRoot);
+    setInputVal("");
+    setShowInput(null);
+    setShowChildren(true);
   };
 
   return (
     <>
-      <div className="folder" onClick={() => handleExpand(node.id)}>
+      <div
+        className="folder"
+        onClick={() => (node.isFolder ? setShowChildren((prev) => !prev) : {})}
+      >
         <span>
           {node.isFolder ? "📁" : "📄"}&nbsp;{node.name}
         </span>
         {node.isFolder && (
           <div className="folder__add-btns">
-            <button onClick={(e) => handleAddFileBtnClick(e, false)}>
+            <button onClick={(e) => onAddFolderClick(e, false)}>
               Add file
             </button>
-            <button onClick={(e) => handleAddFileBtnClick(e)}>
-              Add folder
-            </button>
+            <button onClick={(e) => onAddFolderClick(e)}>Add folder</button>
           </div>
         )}
       </div>
 
       {showInput && (
         <input
+          value={inputVal}
           autoFocus={true}
-          onBlur={() => setShowInput(false)}
-          onKeyDown={(e) => handleCreateFile(e, node)}
+          onKeyDown={handleKeyDown}
+          onBlur={() => setShowInput(null)}
+          onChange={(e) => setInputVal(e.target.value.toString().trim())}
         />
       )}
 
-      {expanded.includes(node.id.toString()) && node.children && (
+      {showChildren && (
         <div className="folder__children">
-          {node.children
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .map((child, idx) => {
-              return <Folder node={child} key={child.name + "-" + idx} />;
-            })}
+          {node.children?.length > 0 &&
+            node.children
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((child, idx) => {
+                return (
+                  <Folder
+                    node={child}
+                    key={idx + "-" + child.id}
+                    onCreateFolder={onCreateFolder}
+                  />
+                );
+              })}
         </div>
       )}
     </>
   );
 };
 
-const FileExplorer = ({ data = [] }) => {
+const createNode = (name, isFolder) => {
+  return {
+    isFolder: isFolder,
+    name: name.toString().trim(),
+    id: Date.now() + name.toString().trim(),
+  };
+};
+
+const FileExplorer = () => {
+  const [fileExplorerData, setFileExplorerData] = useState(FILE_EXPLORER_DATA);
+
+  const handleCreateFolder = (
+    folderId,
+    folderName,
+    isFolder = true,
+    isRoot = false
+  ) => {
+    if (isRoot) {
+      setFileExplorerData({
+        ...fileExplorerData,
+        children: [
+          ...fileExplorerData.children,
+          createNode(folderName, isFolder),
+        ],
+      });
+      return;
+    }
+
+    const createFolder = (explorerData) => {
+      return {
+        ...explorerData,
+        children: explorerData.children.map((node) => {
+          if (node.id === folderId) {
+            return {
+              ...node,
+              children: [
+                ...(node.children || []),
+                createNode(folderName, isFolder),
+              ],
+            };
+          }
+
+          if (node.children) {
+            return createFolder(node);
+          }
+
+          return node;
+        }),
+      };
+    };
+
+    setFileExplorerData(createFolder(fileExplorerData));
+  };
+
   return (
     <div className="file-explorer-wrapper">
-      <Folder node={data} />
+      <Folder onCreateFolder={handleCreateFolder} node={fileExplorerData} />
     </div>
   );
 };
