@@ -35,14 +35,25 @@ const DIRECTIONS = [
     opposite: 39, //right
   },
 ];
+const generateFood = () => {
+  return [
+    Math.floor(Math.random() * (15 - 0) + 0),
+    Math.floor(Math.random() * (15 - 0) + 0),
+  ];
+};
 
 const SnakeGame = () => {
   const [score, setScore] = useState(0);
+  const [food, setFood] = useState(generateFood());
   const [direction, setDirection] = useState(DIRECTIONS[3]);
   const [snakeCoords, setSnakeCoords] = useState(INITIAL_SNAKE_COORDINATES);
 
   const isSnakeCoord = (x, y) => {
     return snakeCoords.some(([a, b]) => a === x && b === y);
+  };
+
+  const isFoodCoord = (x, y) => {
+    return x === food[0] && y === food[1];
   };
 
   const handleKeyDown = (e) => {
@@ -90,8 +101,15 @@ const SnakeGame = () => {
         return (
           <div className="snake-game-grid">
             {row.map((col, colIdx) => {
-              const bgClass = isSnakeCoord(rowIdx, colIdx) ? " snake" : "";
-              return <div className={`box ${bgClass}`}></div>;
+              const isFood = rowIdx === food[0] && colIdx === food[1];
+              const foodClass = isFood ? "food" : "";
+
+              const isSnake = snakeCoords.some(
+                ([a, b]) => a === rowIdx && b === colIdx
+              );
+              const snakeClass = isSnake ? "snake" : "";
+
+              return <div className={`box ${foodClass} ${snakeClass}`}></div>;
             })}
           </div>
         );
