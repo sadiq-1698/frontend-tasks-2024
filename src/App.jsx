@@ -1,5 +1,6 @@
 import "./App.css";
 import TabComponent from "./components/tab/wrapper";
+import SnakeGameComponent from "./components/snake-game/wrapper";
 import PaginationComponent from "./components/pagination/wrapper";
 import GridSelectComponent from "./components/grid-select/wrapper";
 import StickyNotesComponent from "./components/sticky-notes/wrapper";
@@ -14,7 +15,7 @@ const Divider = () => <div className="divider" />;
 function App() {
   return (
     <>
-      <ProgressBarComponent />
+      {/* <ProgressBarComponent />
       <Divider />
       <TabComponent />
       <Divider />
@@ -31,6 +32,8 @@ function App() {
       <CommentWidgetComponent />
       <Divider />
       <GridSelectDragComponent />
+      <Divider /> */}
+      <SnakeGameComponent />
       <Divider />
     </>
   );
