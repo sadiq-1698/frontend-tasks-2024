@@ -2,10 +2,10 @@ import "./styles.css";
 import { useEffect, useState } from "react";
 
 // 15x15 grid [Done]
-// Snake should be controlled with cursor keys (or WASD if you prefer)
+// Snake should be controlled with cursor keys (or WASD if you prefer) [Done]
 // Snake should start with a length of 3 [Done]
 // One apple at a time should appear in a random position on the grid. When collected, it should increase the score by one, increase the snake length by one, and change to another random position
-// Display a score for how many apples have been collected
+// Display a score for how many apples have been collected [Done]
 // If the snake head collides with the rest of the body, the game should end
 // If the snake head collides with the borders, the game should end
 
@@ -13,9 +13,9 @@ const SNAKE_GRID = [
   ...Array.from({ length: 15 }, () => new Array(15).fill("")),
 ];
 const INITIAL_SNAKE_COORDINATES = [
-  [0, 1],
-  [0, 2],
-  [0, 3],
+  [0, 11],
+  [0, 12],
+  [0, 13],
 ];
 const DIRECTIONS = [
   {
@@ -56,22 +56,26 @@ const SnakeGame = () => {
   };
 
   useEffect(() => {
-    // setSnakeCoords((prev) => )
-    // let snakeCoordsCopy = [...snakeCoords];
-    // const head = snakeCoordsCopy[0];
-    // let newHead;
-    // snakeCoordsCopy.pop();
-    // if (direction.direction === DIRECTIONS[0].direction) {
-    //   newHead = [head[0] - 1, head[1]];
-    // } else if (direction.direction === DIRECTIONS[1].direction) {
-    //   newHead = [head[0], head[1] + 1];
-    // } else if (direction.direction === DIRECTIONS[2].direction) {
-    //   newHead = [head[0] + 1, head[1]];
-    // } else if (direction.direction === DIRECTIONS[3].direction) {
-    //   newHead = [head[0], head[1] - 1];
-    // }
-    // snakeCoordsCopy = [newHead, ...snakeCoordsCopy];
-    // setSnakeCoords([...snakeCoordsCopy]);
+    const interval = setInterval(() => {
+      setSnakeCoords((prev) => {
+        let snakeCoordsCopy = [...prev];
+        const head = snakeCoordsCopy[0];
+        let newHead;
+        snakeCoordsCopy.pop();
+        if (direction.direction === DIRECTIONS[0].direction) {
+          newHead = [head[0] - 1, head[1]];
+        } else if (direction.direction === DIRECTIONS[1].direction) {
+          newHead = [head[0], head[1] + 1];
+        } else if (direction.direction === DIRECTIONS[2].direction) {
+          newHead = [head[0] + 1, head[1]];
+        } else if (direction.direction === DIRECTIONS[3].direction) {
+          newHead = [head[0], head[1] - 1];
+        }
+        snakeCoordsCopy = [newHead, ...snakeCoordsCopy];
+        return [...snakeCoordsCopy];
+      });
+    }, 100);
+    return () => clearInterval(interval);
   }, [direction]);
 
   return (
