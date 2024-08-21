@@ -37,6 +37,7 @@ const DIRECTIONS = [
 ];
 
 const SnakeGame = () => {
+  const [score, setScore] = useState(0);
   const [direction, setDirection] = useState(DIRECTIONS[3]);
   const [snakeCoords, setSnakeCoords] = useState(INITIAL_SNAKE_COORDINATES);
 
@@ -80,6 +81,7 @@ const SnakeGame = () => {
       onKeyDown={handleKeyDown}
       className="snake-game-wrapper"
     >
+      <div>Score: {score}</div>
       {SNAKE_GRID.map((row, rowIdx) => {
         return (
           <div className="snake-game-grid">
