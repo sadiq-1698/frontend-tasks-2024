@@ -1,0 +1,22 @@
+.snake-game-wrapper {
+    width: 360px;
+    margin: 0 auto;
+}
+
+.snake-game-grid {
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+}
+
+.box {
+    border: 1px solid black;
+    height: 24px;
+}
+
+.box.snake {
+    background-color: green;
+}
+
+.box.food {
+    background-color: red;
+}
