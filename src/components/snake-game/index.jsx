@@ -10,7 +10,7 @@ import { useEffect, useRef, useState } from "react";
 //  - and change to another random position
 // Display a score for how many apples have been collected [Done]
 // If the snake head collides with the rest of the body, the game should end [Done]
-// If the snake head collides with the borders, the game should end
+// If the snake head collides with the borders, the game should end [Done]
 
 const SNAKE_GRID = [
   ...Array.from({ length: 15 }, () => new Array(15).fill("")),
