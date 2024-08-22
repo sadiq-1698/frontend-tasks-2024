@@ -1,5 +1,5 @@
 import "./styles.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // 15x15 grid [Done]
 // Snake should be controlled with cursor keys (or WASD if you prefer) [Done]
@@ -43,6 +43,8 @@ const generateFood = () => {
 };
 
 const SnakeGame = () => {
+  const gameRef = useRef();
+
   const [score, setScore] = useState(0);
   const [food, setFood] = useState(generateFood());
   const [direction, setDirection] = useState(DIRECTIONS[3]);
@@ -89,10 +91,17 @@ const SnakeGame = () => {
     return () => clearInterval(interval);
   }, [direction]);
 
+  useEffect(() => {
+    if (gameRef.current) {
+      gameRef.current.focus();
+    }
+  }, []);
+
   return (
     <div
       tabIndex={0}
       role="button"
+      ref={gameRef}
       onKeyDown={handleKeyDown}
       className="snake-game-wrapper"
     >
