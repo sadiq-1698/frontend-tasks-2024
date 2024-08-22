@@ -4,9 +4,12 @@ import { useEffect, useRef, useState } from "react";
 // 15x15 grid [Done]
 // Snake should be controlled with cursor keys (or WASD if you prefer) [Done]
 // Snake should start with a length of 3 [Done]
-// One apple at a time should appear in a random position on the grid. When collected, it should increase the score by one, increase the snake length by one, and change to another random position [Done]
+// One apple at a time should appear in a random position on the grid. [Done]
+//  - When collected, it should increase the score by one,
+//  - increase the snake length by one,
+//  - and change to another random position
 // Display a score for how many apples have been collected [Done]
-// If the snake head collides with the rest of the body, the game should end
+// If the snake head collides with the rest of the body, the game should end [Done]
 // If the snake head collides with the borders, the game should end
 
 const SNAKE_GRID = [
@@ -80,6 +83,20 @@ const handleSnakeLength = (prevDir, coords, setSnakeCoords) => {
   setSnakeCoords([...snakeCoordsCopy]);
   return prevDir;
 };
+const isGameOver = (snakeCoords) => {
+  if (
+    snakeCoords[0][0] < 0 ||
+    snakeCoords[0][0] >= 15 ||
+    snakeCoords[0][1] < 0 ||
+    snakeCoords[0][1] >= 15 ||
+    snakeCoords
+      .slice(1)
+      .some(([a, b]) => snakeCoords[0][0] === a && snakeCoords[0][1] === b)
+  ) {
+    return true;
+  }
+  return false;
+};
 
 const SnakeGame = () => {
   const gameRef = useRef();
@@ -90,13 +107,20 @@ const SnakeGame = () => {
   const [direction, setDirection] = useState(DIRECTIONS[3]);
   const [snakeCoords, setSnakeCoords] = useState(INITIAL_SNAKE_COORDINATES);
 
+  const restartGame = () => {
+    setScore(0);
+    setFood(generateFood());
+    setDirection(DIRECTIONS[3]);
+    setSnakeCoords(INITIAL_SNAKE_COORDINATES);
+    setGameOver(false);
+    gameRef.current.focus();
+  };
+
   const handleKeyDown = (e) => {
     if (!DIRECTIONS.map((el) => el.direction).includes(e.keyCode)) return;
-
     if (direction.opposite === e.keyCode || direction.direction === e.keyCode) {
       return;
     }
-
     setDirection(DIRECTIONS.find((el) => el.direction === e.keyCode));
   };
 
@@ -122,6 +146,10 @@ const SnakeGame = () => {
 
       return prev;
     });
+
+    if (isGameOver(snakeCoords)) {
+      setGameOver(true);
+    }
   }, [snakeCoords]);
 
   useEffect(() => {
@@ -138,29 +166,45 @@ const SnakeGame = () => {
       onKeyDown={handleKeyDown}
       className="snake-game-wrapper"
     >
-      <div>Score: {score}</div>
-      {SNAKE_GRID.map((row, rowIdx) => {
-        return (
-          <div className="snake-game-grid" key={rowIdx + "-" + (rowIdx - 15)}>
-            {row.map((_, colIdx) => {
-              const isFood = rowIdx === food[0] && colIdx === food[1];
-              const foodClass = isFood ? "food" : "";
+      {!gameOver ? (
+        <>
+          <div>Score: {score}</div>
+          {SNAKE_GRID.map((row, rowIdx) => {
+            return (
+              <div
+                className="snake-game-grid"
+                key={rowIdx + "-" + (rowIdx - 15)}
+              >
+                {row.map((_, colIdx) => {
+                  const isFood = rowIdx === food[0] && colIdx === food[1];
+                  const foodClass = isFood ? "food" : "";
 
-              const isSnake = snakeCoords.some(
-                ([a, b]) => a === rowIdx && b === colIdx
-              );
-              const snakeClass = isSnake ? "snake" : "";
+                  const isSnake = snakeCoords.some(
+                    ([a, b]) => a === rowIdx && b === colIdx
+                  );
+                  const snakeClass = isSnake ? "snake" : "";
 
-              return (
-                <div
-                  key={colIdx + "-" + (colIdx - 15)}
-                  className={`box ${foodClass} ${snakeClass}`}
-                ></div>
-              );
-            })}
-          </div>
-        );
-      })}
+                  return (
+                    <div
+                      key={colIdx + "-" + (colIdx - 15)}
+                      className={`box ${foodClass} ${snakeClass}`}
+                    ></div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </>
+      ) : (
+        <div className="game-over-wrapper">
+          <h1>Game Over</h1>
+          <h3>Your Score: {score}</h3>
+          <br />
+          <button autoFocus={true} onClick={restartGame}>
+            Restart
+          </button>
+        </div>
+      )}
     </div>
   );
 };
