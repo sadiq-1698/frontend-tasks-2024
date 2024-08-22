@@ -50,14 +50,6 @@ const SnakeGame = () => {
   const [direction, setDirection] = useState(DIRECTIONS[3]);
   const [snakeCoords, setSnakeCoords] = useState(INITIAL_SNAKE_COORDINATES);
 
-  const isSnakeCoord = (x, y) => {
-    return snakeCoords.some(([a, b]) => a === x && b === y);
-  };
-
-  const isFoodCoord = (x, y) => {
-    return x === food[0] && y === food[1];
-  };
-
   const handleKeyDown = (e) => {
     if (!DIRECTIONS.map((el) => el.direction).includes(e.keyCode)) return;
 
@@ -92,6 +84,20 @@ const SnakeGame = () => {
   }, [direction]);
 
   useEffect(() => {
+    setFood((prev) => {
+      const [snakeHeadX, snakeHeadY] = snakeCoords[0];
+      const [foodX, foodY] = prev;
+
+      if (foodX === snakeHeadX && snakeHeadY === foodY) {
+        setScore((prev) => prev + 1);
+        return generateFood();
+      }
+
+      return prev;
+    });
+  }, [snakeCoords]);
+
+  useEffect(() => {
     if (gameRef.current) {
       gameRef.current.focus();
     }
@@ -108,8 +114,8 @@ const SnakeGame = () => {
       <div>Score: {score}</div>
       {SNAKE_GRID.map((row, rowIdx) => {
         return (
-          <div className="snake-game-grid">
-            {row.map((col, colIdx) => {
+          <div className="snake-game-grid" key={rowIdx + "-" + (rowIdx - 15)}>
+            {row.map((_, colIdx) => {
               const isFood = rowIdx === food[0] && colIdx === food[1];
               const foodClass = isFood ? "food" : "";
 
@@ -118,7 +124,12 @@ const SnakeGame = () => {
               );
               const snakeClass = isSnake ? "snake" : "";
 
-              return <div className={`box ${foodClass} ${snakeClass}`}></div>;
+              return (
+                <div
+                  key={colIdx + "-" + (colIdx - 15)}
+                  className={`box ${foodClass} ${snakeClass}`}
+                ></div>
+              );
             })}
           </div>
         );
