@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 // 15x15 grid [Done]
 // Snake should be controlled with cursor keys (or WASD if you prefer) [Done]
 // Snake should start with a length of 3 [Done]
-// One apple at a time should appear in a random position on the grid. When collected, it should increase the score by one, increase the snake length by one, and change to another random position
+// One apple at a time should appear in a random position on the grid. When collected, it should increase the score by one, increase the snake length by one, and change to another random position [Done]
 // Display a score for how many apples have been collected [Done]
 // If the snake head collides with the rest of the body, the game should end
 // If the snake head collides with the borders, the game should end
@@ -45,18 +45,40 @@ const handleSnakeDirection = (prev, direction) => {
   let snakeCoordsCopy = [...prev];
   const head = snakeCoordsCopy[0];
   let newHead;
+
   snakeCoordsCopy.pop();
-  if (direction.direction === DIRECTIONS[0].direction) {
+
+  if (direction?.direction === DIRECTIONS[0].direction) {
     newHead = [head[0] - 1, head[1]];
-  } else if (direction.direction === DIRECTIONS[1].direction) {
+  } else if (direction?.direction === DIRECTIONS[1].direction) {
     newHead = [head[0], head[1] + 1];
-  } else if (direction.direction === DIRECTIONS[2].direction) {
+  } else if (direction?.direction === DIRECTIONS[2].direction) {
     newHead = [head[0] + 1, head[1]];
-  } else if (direction.direction === DIRECTIONS[3].direction) {
+  } else if (direction?.direction === DIRECTIONS[3].direction) {
     newHead = [head[0], head[1] - 1];
   }
+
   snakeCoordsCopy = [newHead, ...snakeCoordsCopy];
   return [...snakeCoordsCopy];
+};
+const handleSnakeLength = (prevDir, coords, setSnakeCoords) => {
+  let snakeCoordsCopy = [...coords];
+  const tail = snakeCoordsCopy[snakeCoordsCopy.length - 1];
+  let newTail;
+
+  if (prevDir?.direction === DIRECTIONS[0].direction) {
+    newTail = [tail[0] - 1, tail[1]];
+  } else if (prevDir?.direction === DIRECTIONS[1].direction) {
+    newTail = [tail[0], tail[1] + 1];
+  } else if (prevDir?.direction === DIRECTIONS[2].direction) {
+    newTail = [tail[0] + 1, tail[1]];
+  } else if (prevDir?.direction === DIRECTIONS[3].direction) {
+    newTail = [tail[0], tail[1] - 1];
+  }
+
+  snakeCoordsCopy = [...snakeCoordsCopy, newTail];
+  setSnakeCoords([...snakeCoordsCopy]);
+  return prevDir;
 };
 
 const SnakeGame = () => {
@@ -91,6 +113,9 @@ const SnakeGame = () => {
       const [foodX, foodY] = prev;
 
       if (foodX === snakeHeadX && snakeHeadY === foodY) {
+        setDirection((prev) =>
+          handleSnakeLength(prev, snakeCoords, setSnakeCoords)
+        );
         setScore((prev) => prev + 1);
         return generateFood();
       }
