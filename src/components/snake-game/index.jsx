@@ -41,11 +41,29 @@ const generateFood = () => {
     Math.floor(Math.random() * (15 - 0) + 0),
   ];
 };
+const handleSnakeDirection = (prev, direction) => {
+  let snakeCoordsCopy = [...prev];
+  const head = snakeCoordsCopy[0];
+  let newHead;
+  snakeCoordsCopy.pop();
+  if (direction.direction === DIRECTIONS[0].direction) {
+    newHead = [head[0] - 1, head[1]];
+  } else if (direction.direction === DIRECTIONS[1].direction) {
+    newHead = [head[0], head[1] + 1];
+  } else if (direction.direction === DIRECTIONS[2].direction) {
+    newHead = [head[0] + 1, head[1]];
+  } else if (direction.direction === DIRECTIONS[3].direction) {
+    newHead = [head[0], head[1] - 1];
+  }
+  snakeCoordsCopy = [newHead, ...snakeCoordsCopy];
+  return [...snakeCoordsCopy];
+};
 
 const SnakeGame = () => {
   const gameRef = useRef();
 
   const [score, setScore] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
   const [food, setFood] = useState(generateFood());
   const [direction, setDirection] = useState(DIRECTIONS[3]);
   const [snakeCoords, setSnakeCoords] = useState(INITIAL_SNAKE_COORDINATES);
@@ -62,23 +80,7 @@ const SnakeGame = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setSnakeCoords((prev) => {
-        let snakeCoordsCopy = [...prev];
-        const head = snakeCoordsCopy[0];
-        let newHead;
-        snakeCoordsCopy.pop();
-        if (direction.direction === DIRECTIONS[0].direction) {
-          newHead = [head[0] - 1, head[1]];
-        } else if (direction.direction === DIRECTIONS[1].direction) {
-          newHead = [head[0], head[1] + 1];
-        } else if (direction.direction === DIRECTIONS[2].direction) {
-          newHead = [head[0] + 1, head[1]];
-        } else if (direction.direction === DIRECTIONS[3].direction) {
-          newHead = [head[0], head[1] - 1];
-        }
-        snakeCoordsCopy = [newHead, ...snakeCoordsCopy];
-        return [...snakeCoordsCopy];
-      });
+      setSnakeCoords((prev) => handleSnakeDirection(prev, direction));
     }, 100);
     return () => clearInterval(interval);
   }, [direction]);
