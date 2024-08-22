@@ -15,7 +15,7 @@ const Divider = () => <div className="divider" />;
 function App() {
   return (
     <>
-      {/* <ProgressBarComponent />
+      <ProgressBarComponent />
       <Divider />
       <TabComponent />
       <Divider />
@@ -32,7 +32,7 @@ function App() {
       <CommentWidgetComponent />
       <Divider />
       <GridSelectDragComponent />
-      <Divider /> */}
+      <Divider />
       <SnakeGameComponent />
       <Divider />
     </>
