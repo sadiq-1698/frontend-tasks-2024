@@ -1,0 +1,30 @@
+.t3-grid-wrapper {
+    width: 360px;
+    margin: 0 auto;
+}
+
+.t3-grid {
+    border: 2px solid black;
+}
+
+.t3-grid-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.t3-grid-col {
+    border: 2px solid black;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.t3-grid-col:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.t3-grid-item {
+    font-size: 40px;
+}
